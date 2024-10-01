@@ -1,10 +1,14 @@
 package edu.temple.activities
 
+//import android.content.Intent
+
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -23,25 +27,32 @@ class MainActivity : AppCompatActivity() {
         with (findViewById<RecyclerView>(R.id.textSizeSelectorRecyclerView)) {
 
             // TODO Step 2: Implement lambda body to launch new activity and pass value
-            adapter = TextSizeAdapter(textSizes){
 
-            }
             layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = TextSizeAdapter(textSizes){ selectedSize ->
+
+                val launchIntent = Intent(this@MainActivity,DisplayActivity::class.java)
+                launchIntent.putExtra("TEXT_SIZE",selectedSize)
+                startActivity(launchIntent)
+
+                }
+            }
         }
-
-
-
     }
-}
-
 
 /* Convert to RecyclerView.Adapter */
-class TextSizeAdapter (private val textSizes: Array<Int>, callback: (Int)->Unit) : RecyclerView.Adapter<TextSizeAdapter.TextSizeViewHolder>() {
+class TextSizeAdapter (private val textSizes: Array<Int>, private val callback: (Int)->Unit) : RecyclerView.Adapter<TextSizeAdapter.TextSizeViewHolder>() {
 
     // TODO Step 1: Complete onClickListener to return selected number
     inner class TextSizeViewHolder(val textView: TextView) : RecyclerView.ViewHolder (textView) {
         init {
-            textView.setOnClickListener {  }
+            textView.setOnClickListener {
+                //val selectedTextSize = textSizes[position]
+                //val intent = Intent(this, DisplayActivity::class.java)
+                //intent.putExtra("TEXT_SIZE",selectedTextSize)
+                callback(textSizes[adapterPosition])
+                //startActivity(intent)
+            }
         }
     }
 
